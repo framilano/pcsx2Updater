@@ -1,5 +1,6 @@
 import requests
 import os
+import shutil
 
 def overwrite_oldfiles():
     extracted_folder = ""
@@ -7,10 +8,10 @@ def overwrite_oldfiles():
         if ("pcsx2-" in folder):
             extracted_folder = folder
             break
-    for files in os.listdir(extracted_folder):
-        os.system("move /y " + extracted_folder + "\\" + files + " .")
+        
+    os.system("xcopy /e /y " + extracted_folder + " .")
 
-    os.rmdir(extracted_folder)
+    os.system("RMDIR /Q/S " + extracted_folder)
     os.remove("latest.7z")
 
 def download_html():
@@ -33,13 +34,33 @@ def latest_version_parser():
     html_parser.close()
     return latest_link.split(";")[1].replace("&amp", "")
 
+def already_latest(latest_version):
+    try:
+        search = open("version.txt", "r")
+    except (FileNotFoundError):
+        print("version.txt not found, creating it")
+        search = open("version.txt", "w")
+        search.write(latest_version)
+        return False
+    actual_version = search.readlines()
+    if (actual_version[0] == latest_version):
+        print("You're already on latest version!")
+        return True
+    else: return False
+
+
 def main():
+
     print("Downloading the latest html from https://buildbot.orphis.net/pcsx2/index.php")
     download_html()
     print("index.html downloaded!")
 
     print("Parsing the latest built version")
     latest_version = latest_version_parser()
+    
+    if (already_latest(latest_version) == True): 
+        os.system("pcsx2.exe")
+        return
 
     print("Requesting {}".format(latest_version))
     new_request = requests.get("https://buildbot.orphis.net/pcsx2/index.php?m=dl&" + latest_version + "&platform=windows-x86")
@@ -51,6 +72,7 @@ def main():
 
     overwrite_oldfiles()
    
+    os.system("pcsx2.exe")
     
     return
 
