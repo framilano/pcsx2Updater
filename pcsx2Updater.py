@@ -9,9 +9,9 @@ def overwrite_oldfiles():
             extracted_folder = folder
             break
         
-    os.system("xcopy /e /y " + extracted_folder + " .")
+    os.popen("xcopy /e /y " + extracted_folder + " .")
 
-    os.system("RMDIR /Q/S " + extracted_folder)
+    os.popen("RMDIR /Q/S " + extracted_folder)
     os.remove("latest.7z")
 
 def download_html():
@@ -21,7 +21,7 @@ def download_html():
 
 def zip_extraction():
     command = '\"C:\Program Files\\7-Zip\\7z.exe\" x -y latest.7z'
-    os.system(command)
+    os.popen(command)
 
 def latest_version_parser():
     html_parser = open("index.html")
@@ -59,7 +59,7 @@ def main():
     latest_version = latest_version_parser()
     
     if (already_latest(latest_version) == True): 
-        os.system("pcsx2.exe")
+        os.popen("pcsx2.exe")
         return
 
     print("Requesting {}".format(latest_version))
@@ -72,7 +72,7 @@ def main():
 
     overwrite_oldfiles()
    
-    os.system("pcsx2.exe")
+    os.popen("pcsx2.exe")
     
     return
 
