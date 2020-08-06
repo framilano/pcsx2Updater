@@ -46,7 +46,10 @@ def already_latest(latest_version):
     if (actual_version[0] == latest_version):
         print("You're already on latest version!")
         return True
-    else: return False
+    else: 
+        search = open("version.txt", "w")
+        search.write(latest_version)
+        return False
 
 
 def main():
