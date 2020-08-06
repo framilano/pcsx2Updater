@@ -27,6 +27,7 @@ def latest_version_parser():
             latest_link = line
             break
     html_parser.close()
+    os.system("del /q /s index.html")
     return latest_link.split(";")[1].replace("&amp", "")
 
 def already_latest(latest_version):
@@ -51,7 +52,7 @@ def download_latest_zip(latest_version):
     new_request = requests.get("https://buildbot.orphis.net/pcsx2/index.php?m=dl&" + latest_version + "&platform=windows-x86")
     open('latest.7z', 'wb').write(new_request.content)
     print("latest.7z created!")
-    os.system("del /q /s index.html")
+    
 
 def main():
     print("Downloading the latest .html from https://buildbot.orphis.net/pcsx2/index.php")
@@ -63,7 +64,6 @@ def main():
     
     #Check if we're already running the latest pcsx2 version
     if (already_latest(latest_version) == True): 
-        os.remove("index.html")
         os.popen("pcsx2.exe")
         return
 
